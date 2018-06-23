@@ -7,73 +7,64 @@ import java.util.Scanner;
 
 public class app {
 
+	private static final String PATH = "src\\entrada1.txt";
+	private static final boolean DEBUG = true;
 	public static String mode;
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		
-		System.out.println("Programa iniciado:  ");
 
-		String arquivo = readFile();
-		
-		parseFile(arquivo);
-		
-		//finish
-        System.out.println("Finalizado");
-		
+		String s = DEBUG ? PATH : readFileFromTerminal();
+		File f = new File(s);
 
-	}
-
-	private static void parseFile(String arquivo) {
-
-		File f = new File(arquivo);
 		FileReader fr;
-
-		Runnable programMode;
-		System.out.println("parse file ok");
+		BufferedReader br;
 
 		try {
 			fr = new FileReader(f);
-			
-			BufferedReader br = new BufferedReader(fr);
-			
-			if(br.ready()){
+			br = new BufferedReader(fr);
+
+			if (br.ready()) {
+				mode = br.readLine().toLowerCase();
 				
-				memoryManager(br);				
+				String algo = br.readLine().toLowerCase();
+
+				int pageSize = Integer.parseInt(br.readLine());
+				int memorySize = Integer.parseInt(br.readLine());
+				int diskSize = Integer.parseInt(br.readLine());
+				
+				System.out.println("Modo: " + mode);
+				System.out.println("Algoritmo de troca: " + algo);
+				System.out.println("Tamanho da pagina: "  + pageSize);
+				System.out.println("tamanho do disco: " + diskSize);
+				
+				
+			
 			}
 			
 			br.close();
-            fr.close();
-			
+			fr.close();
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
-	
-	private static void memoryManager(BufferedReader br) throws IOException{
+
+	private static String readFileFromTerminal() {
+		Scanner s = new Scanner(System.in);
+		return s.nextLine();
+	}
+
+	private static void inicia(BufferedReader br) throws IOException {
 		mode = br.readLine().toLowerCase();
-		
-		String algo = br.readLine().toLowerCase();
-        int pageSize = Integer.parseInt(br.readLine());
-        int memorySize = Integer.parseInt(br.readLine());
-        int diskSize = Integer.parseInt(br.readLine());
-        System.out.println("Modo de execução: "+mode+ "alguma coisa: "+algo + " Tamanho da pagina:"+ pageSize + " Tamanho da memória: "+memorySize + "Tamanho do disco: " + diskSize);
 
 	}
-	
-	private static void modoExecucao(){
-		
-	}
 
-	private static String readFile() throws FileNotFoundException {
-
-		Scanner entrada = new Scanner(new FileReader("src\\entrada1.txt"));
-		System.out.println("ok");
-
-		return entrada.nextLine();
+	private static boolean programMode() {
+		return mode.equals("sequencial") || mode.equals("s") || mode.equals("0");
 	}
 
 }
