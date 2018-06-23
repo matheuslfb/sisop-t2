@@ -35,6 +35,7 @@ public class app {
 				
 				System.out.println("Modo: " + mode);
 				System.out.println("Algoritmo de troca: " + algo);
+				System.out.println("Tamanho da memória: " + memorySize);
 				System.out.println("Tamanho da pagina: "  + pageSize);
 				System.out.println("tamanho do disco: " + diskSize);
 				
