@@ -13,5 +13,6 @@ public class Processos {
 		this.tamPagina = tamPagina;
 		this.paginas = new ArrayList<>();
 	}
+	
 
 }

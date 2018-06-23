@@ -26,26 +26,24 @@ public class app {
 
 			if (br.ready()) {
 				mode = br.readLine().toLowerCase();
-				
+
 				String algo = br.readLine().toLowerCase();
 
 				int pageSize = Integer.parseInt(br.readLine());
 				int memorySize = Integer.parseInt(br.readLine());
 				int diskSize = Integer.parseInt(br.readLine());
-				
+
 				System.out.println("Modo: " + mode);
 				System.out.println("Algoritmo de troca: " + algo);
+				System.out.println("Tamanho da pagina: " + pageSize);
 				System.out.println("Tamanho da memória: " + memorySize);
-				System.out.println("Tamanho da pagina: "  + pageSize);
 				System.out.println("tamanho do disco: " + diskSize);
-				
-				
-			
+
 			}
-			
+
 			br.close();
 			fr.close();
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
