@@ -67,7 +67,7 @@ public class GerenteDeMemoria {
 		Processos p;
 		if(listaProcessos.containsKey(process)){
 			p = listaProcessos.get(process);
-			p.getPagina(parameter);
+			//p.getPagina(parameter);
 			return "Processo "+ "["+ process+ "]"+ " acessado! " + "Paginas do processo: ";
 		}
 		return "Não foi possivel acessar o processo: " + "[ "+ process+" ]";
@@ -79,7 +79,7 @@ public class GerenteDeMemoria {
 	
 	public Pagina verificaPagina(Pagina[] vetor ){
 		for (int i = 0; i < vetor.length; i++) {
-			if(vetor[i] == null)
+			if(vetor[i] != null)
 				return vetor[i];			
 		}
 		
@@ -145,7 +145,7 @@ public class GerenteDeMemoria {
 	 */
 	private String expandirProcesso(String process, int parameter) {
 		// TODO Auto-generated method stub
-		return null;
+		return "não implementado";
 	}
 
 	

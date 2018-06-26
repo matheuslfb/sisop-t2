@@ -21,13 +21,13 @@ public class Processos {
 		this.paginas.add(p);
 	}
 	
-	public Pagina getPagina(int posicaoMemoria){
-		return paginas.get( posicaoMemoria / tamPagina );
+	public List<Pagina> getPagina(){
+		return this.paginas;
 	} 
 	
-	public boolean estaNaRam(int posicaoMemoria){
-		return getPagina(posicaoMemoria).ram();
-	} 
+//	public boolean estaNaRam(int posicaoMemoria){
+//		return getPagina(posicaoMemoria).ram();
+//	} 
 	
 	public String toString(){return id;}
 }
