@@ -56,6 +56,23 @@ public class GerenteDeMemoria {
 
 	}
 	
+	/*
+	 * @param nome do processo, parametro que será a posição de memória em que o
+	 * processo está
+	 * 
+	 * @return retorna mensagem de "ok" ao conseguir acessar o processo, "erro"
+	 * caso não consiga.
+	 */
+	private String acessarProcesso(String process, int parameter) {
+		Processos p;
+		if(listaProcessos.containsKey(process)){
+			p = listaProcessos.get(process);
+			p.getPagina(parameter);
+			return "Processo "+ "["+ process+ "]"+ " acessado! " + "Paginas do processo: ";
+		}
+		return "Não foi possivel acessar o processo: " + "[ "+ process+" ]";
+	}
+	
 	public void vinculaPagina(Processos p, int tamPagina){
 			p.addPagina(verificaPagina(ram));
 	}
@@ -69,6 +86,16 @@ public class GerenteDeMemoria {
 		return null;
 	}
 
+	/*
+	 * Faz a leitura linha a linha do arquivo.
+	 * 
+	 * A execução do programa depende dos comando lidos no arquivo de entrada.
+	 * 
+	 * "C" ---> cria um processo
+	 * "A" ---> recebe um processo por parametro e tenta acessar ele
+	 * "M" ---> aloca mais espaço para o processo
+	 * 
+ 	 */
 	public void criar(BufferedReader br) {
 
 		String linha;
@@ -81,7 +108,7 @@ public class GerenteDeMemoria {
 			while ((linha = br.readLine()) != null) {
 				split = linha.split(" ");
 
-				// parse parameters
+				
 				processo = split[1];
 
 				if (split.length > 2)
@@ -121,17 +148,7 @@ public class GerenteDeMemoria {
 		return null;
 	}
 
-	/*
-	 * @param nome do processo, parametro que será a posição de memória em que o
-	 * processo está
-	 * 
-	 * @return retorna mensagem de "ok" ao conseguir acessar o processo, "erro"
-	 * caso não consiga.
-	 */
-	private String acessarProcesso(String process, int parameter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	
 

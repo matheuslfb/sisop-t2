@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Processos {
 
-	private ArrayList paginas;
+	private List<Pagina> paginas;
 	private String id;
 	private int tam;
 	private int tamPagina;
@@ -17,10 +18,12 @@ public class Processos {
 
 	
 	public void addPagina(Pagina p){
-		paginas.add(p);
+		this.paginas.add(p);
 	}
 	
-	
+	public Pagina getPagina(int posicaoMemoria){
+		return paginas.get( paginas.size()/posicaoMemoria );
+	} 
 	
 	public String toString(){return id;}
 }

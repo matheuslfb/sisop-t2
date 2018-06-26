@@ -13,5 +13,13 @@ public class Pagina {
 	public void setaProcesso(Processos p){
 		this.p = p;
 	}
+	
+	public Processos getProcesso(){
+		return p;
+	}
+	
+	public String toString(){
+		return p.toString() + this.memoria;
+	}
 
 }
