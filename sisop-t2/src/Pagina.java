@@ -21,5 +21,10 @@ public class Pagina {
 	public String toString(){
 		return p.toString() + this.memoria;
 	}
+	
+	//verifica se a página está na ram
+	public boolean ram(){
+		return memoria == 'R';
+	}
 
 }

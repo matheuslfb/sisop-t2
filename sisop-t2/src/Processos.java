@@ -22,7 +22,11 @@ public class Processos {
 	}
 	
 	public Pagina getPagina(int posicaoMemoria){
-		return paginas.get( paginas.size()/posicaoMemoria );
+		return paginas.get( posicaoMemoria / tamPagina );
+	} 
+	
+	public boolean estaNaRam(int posicaoMemoria){
+		return getPagina(posicaoMemoria).ram();
 	} 
 	
 	public String toString(){return id;}
