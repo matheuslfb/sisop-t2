@@ -9,7 +9,9 @@ public class app {
 
 	private static final String PATH = "src\\entrada1.txt";
 	private static final boolean DEBUG = true;
-	public static String mode;
+	
+	private static String mode;	
+	private static GerenteDeMemoria gm;
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
@@ -32,6 +34,11 @@ public class app {
 				int pageSize = Integer.parseInt(br.readLine());
 				int memorySize = Integer.parseInt(br.readLine());
 				int diskSize = Integer.parseInt(br.readLine());
+				
+				gm = new GerenteDeMemoria(algo, pageSize, memorySize, diskSize);
+				
+				
+				
 
 				System.out.println("Modo: " + mode);
 				System.out.println("Algoritmo de troca: " + algo);
@@ -51,6 +58,8 @@ public class app {
 		}
 
 	}
+	
+	
 
 	private static String readFileFromTerminal() {
 		Scanner s = new Scanner(System.in);
