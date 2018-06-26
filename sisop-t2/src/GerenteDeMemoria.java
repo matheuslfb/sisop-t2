@@ -9,7 +9,7 @@ public class GerenteDeMemoria {
 
 	private int tamPagina, tamMemoria, tamDisco;
 
-	private Map<String, Process> processes = new HashMap();
+	private Map<String, Processos> listaProcessos = new HashMap();
 
 	private Pagina[] ram, disk;
 
@@ -75,9 +75,11 @@ public class GerenteDeMemoria {
 	}
 
 	/*
-	 * @param nome do processo, parametro que será o tamanho de memoria necessária para alocar o processo.
+	 * @param nome do processo, parametro que será o tamanho de memoria
+	 * necessária para alocar o processo.
 	 * 
-	 * @return retorna uma mensagem de "ok" se conseguir alocar a memória esperada, senão, retorna erro.
+	 * @return retorna uma mensagem de "ok" se conseguir alocar a memória
+	 * esperada, senão, retorna erro.
 	 */
 	private String expandirProcesso(String process, int parameter) {
 		// TODO Auto-generated method stub
@@ -85,9 +87,11 @@ public class GerenteDeMemoria {
 	}
 
 	/*
-	 * @param nome do processo, parametro que será a posição de memória em que o processo está
+	 * @param nome do processo, parametro que será a posição de memória em que o
+	 * processo está
 	 * 
-	 * @return retorna mensagem de "ok" ao conseguir acessar o processo, "erro" caso não consiga.
+	 * @return retorna mensagem de "ok" ao conseguir acessar o processo, "erro"
+	 * caso não consiga.
 	 */
 	private String acessarProcesso(String process, int parameter) {
 		// TODO Auto-generated method stub
@@ -95,13 +99,22 @@ public class GerenteDeMemoria {
 	}
 
 	/*
-	 * @param nome do processo, parametro que será o tamanho da memória necessária para criar o processo
+	 * @param nome do processo, parametro que será o tamanho da memória
+	 * necessária para criar o processo
 	 * 
 	 * @return retorna uma mensagem de ok ou falha na criação do processo.
 	 */
 	private String criarProcesso(String process, int parameter) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if(!listaProcessos.containsKey(process)){
+			Processos p = new Processos(process, parameter, this.tamPagina);
+			listaProcessos.put(process, p);
+			return "Processo criado com sucesso!";
+		}
+		else
+			return "Não foi possivel criar o processo!";
+		
+		
 	}
 
 }
