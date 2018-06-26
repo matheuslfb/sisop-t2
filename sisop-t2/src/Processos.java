@@ -15,4 +15,12 @@ public class Processos {
 	}
 	
 
+	
+	public void addPagina(Pagina p){
+		paginas.add(p);
+	}
+	
+	
+	
+	public String toString(){return id;}
 }

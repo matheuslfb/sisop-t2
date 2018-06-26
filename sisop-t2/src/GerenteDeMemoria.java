@@ -29,9 +29,44 @@ public class GerenteDeMemoria {
 	private void criarPaginas() {
 		for (int i = 0; i < ram.length; i++)
 			ram[i] = new Pagina('R');
+		System.out.println("Quantidade de paginas da memória: " + ram.length);
 
 		for (int i = 0; i < disk.length; i++)
 			disk[i] = new Pagina('D');
+		System.out.println("Quantidade de paginas do disco: "+disk.length);
+	}
+	
+	
+	/*
+	 * @param nome do processo, parametro que será o tamanho da memória
+	 * necessária para criar o processo
+	 * 
+	 * @return retorna uma mensagem de ok ou falha na criação do processo.
+	 */
+	private String criarProcesso(String process, int parameter) {
+
+		if (!listaProcessos.containsKey(process)) {
+			Processos p = new Processos(process, parameter, this.tamPagina);
+			listaProcessos.put(process, p);
+			
+			vinculaPagina(p, tamPagina);
+			return "Processo criado com sucesso! \n Páginas do processo: " ;
+		} else
+			return "Não foi possivel criar o processo!";
+
+	}
+	
+	public void vinculaPagina(Processos p, int tamPagina){
+			p.addPagina(verificaPagina(ram));
+	}
+	
+	public Pagina verificaPagina(Pagina[] vetor ){
+		for (int i = 0; i < vetor.length; i++) {
+			if(vetor[i] == null)
+				return vetor[i];			
+		}
+		
+		return null;
 	}
 
 	public void criar(BufferedReader br) {
@@ -98,23 +133,6 @@ public class GerenteDeMemoria {
 		return null;
 	}
 
-	/*
-	 * @param nome do processo, parametro que será o tamanho da memória
-	 * necessária para criar o processo
-	 * 
-	 * @return retorna uma mensagem de ok ou falha na criação do processo.
-	 */
-	private String criarProcesso(String process, int parameter) {
-		
-		if(!listaProcessos.containsKey(process)){
-			Processos p = new Processos(process, parameter, this.tamPagina);
-			listaProcessos.put(process, p);
-			return "Processo criado com sucesso!";
-		}
-		else
-			return "Não foi possivel criar o processo!";
-		
-		
-	}
+	
 
 }
