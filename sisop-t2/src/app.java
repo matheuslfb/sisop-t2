@@ -2,63 +2,78 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.*;
 import java.util.Scanner;
 
 public class app {
 
-	private static final String PATH = "src\\entrada2.txt";
+	private static final String PATH = "src/entrada1.txt";
 	
-	private static String mode;
-	private static GerenteDeMemoria gm;
+	private static String modo;
+	private static String algoritmo;
+	private static int tamPagina;
+	private static int enderecoRam;
+	private static int enderecoSWAP;
 
 	public static void main(String[] args) throws IOException {
 
-		String s =  readFileFromTerminal(PATH);
-		File f = new File(s);
-
-		FileReader fr;
-		BufferedReader br;
-
-		try {
-			fr = new FileReader(f);
-			br = new BufferedReader(fr);
-
-			if (br.ready()) {
-				mode = br.readLine().toLowerCase();
-
-				String algo = br.readLine().toLowerCase();
-
-				int pageSize = Integer.parseInt(br.readLine());
-				int memorySize = Integer.parseInt(br.readLine());
-				int diskSize = Integer.parseInt(br.readLine());
-
-				gm = new GerenteDeMemoria(algo, pageSize, memorySize, diskSize);
-
-				System.out.println("Modo: " + mode);
-				System.out.println("Algoritmo de troca: " + algo);
-				System.out.println("Tamanho da pagina: " + pageSize);
-				System.out.println("Tamanho da mem�ria: " + memorySize);
-				System.out.println("tamanho do disco: " + diskSize);
-
-				gm.criar(br);
-
-			}
-
-			br.close();
-			fr.close();
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		readFileFromTerminal();
 	}
 
-	private static String readFileFromTerminal(String a) {
-		Scanner s = new Scanner(a);
-		return s.nextLine();
+	private static void readFileFromTerminal() {
+		Scanner in = new Scanner(System.in);
+		
+		Path path = Paths.get(System.getProperty("user.dir") + "\\src\\entrada1.txt");
+		char os = System.getProperty("os.name").charAt(0);
+		if (os == 'L' || os == 'M') {
+			path = Paths.get(System.getProperty("user.dir") + "//src//entrada1.txt");
+		}
+
+		try (BufferedReader br = Files.newBufferedReader(path, Charset.defaultCharset())) {
+			Scanner sc = new Scanner(path);
+
+			// Informacoes para o Gerente de Memoria.
+			modo = sc.nextLine(); // apenas sequencial
+			algoritmo = sc.nextLine();
+			tamPagina = sc.nextInt();
+			enderecoRam = sc.nextInt();
+			enderecoSWAP = sc.nextInt();
+
+			GerenteDeMemoria gerente = new GerenteDeMemoria(algoritmo, tamPagina, enderecoRam, enderecoSWAP);
+
+			gerente.criaMemoriVirtual();
+			gerente.criaDisco();
+
+			// Informacoes de cada instrucao.
+			String tipo;
+			String nome;
+			int processo = 0;
+			int enderecos = 0;
+
+			// Sao lidas aqui.
+			while (sc.hasNext()) {
+				enderecos = 0;
+				tipo = sc.next();
+				if (!tipo.equals("T")) {
+					nome = sc.next();
+					processo = Integer.valueOf(nome.substring(1));
+					enderecos = sc.nextInt();
+				} else {
+					nome = sc.next();
+					processo = Integer.valueOf(nome.substring(1));
+				}
+				
+				gerente.run(tipo, processo, enderecos);
+			}
+			System.out.print("\n-Final da execução-");
+		} catch (IOException e) {
+			System.err.format("Erro de I/O", e);
+		}
+
 	}	
 
 }
