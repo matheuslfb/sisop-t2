@@ -8,4 +8,14 @@ public class Pagina {
 		enderecos = new ArrayList<>();
 		this.indice = indice;
 	}
+
+	public int getIndice() {
+		return indice;
+	}
+
+	public void setIndice(int indice) {
+		this.indice = indice;
+	}
+	
+	
 }

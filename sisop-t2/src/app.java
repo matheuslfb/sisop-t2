@@ -11,8 +11,6 @@ import java.util.Scanner;
 
 public class app {
 
-	private static final String PATH = "src/entrada1.txt";
-	
 	private static String modo;
 	private static String algoritmo;
 	private static int tamPagina;
@@ -26,7 +24,7 @@ public class app {
 
 	private static void readFileFromTerminal() {
 		Scanner in = new Scanner(System.in);
-		
+
 		Path path = Paths.get(System.getProperty("user.dir") + "\\src\\entrada1.txt");
 		char os = System.getProperty("os.name").charAt(0);
 		if (os == 'L' || os == 'M') {
@@ -36,8 +34,7 @@ public class app {
 		try (BufferedReader br = Files.newBufferedReader(path, Charset.defaultCharset())) {
 			Scanner sc = new Scanner(path);
 
-			// Informacoes para o Gerente de Memoria.
-			modo = sc.nextLine(); // apenas sequencial
+			modo = sc.nextLine();
 			algoritmo = sc.nextLine();
 			tamPagina = sc.nextInt();
 			enderecoRam = sc.nextInt();
@@ -48,13 +45,12 @@ public class app {
 			gerente.criaMemoriVirtual();
 			gerente.criaDisco();
 
-			// Informacoes de cada instrucao.
 			String tipo;
 			String nome;
 			int processo = 0;
 			int enderecos = 0;
 
-			// Sao lidas aqui.
+			// Faz a leitura de cada linha
 			while (sc.hasNext()) {
 				enderecos = 0;
 				tipo = sc.next();
@@ -66,7 +62,7 @@ public class app {
 					nome = sc.next();
 					processo = Integer.valueOf(nome.substring(1));
 				}
-				
+
 				gerente.run(tipo, processo, enderecos);
 			}
 			System.out.print("\n-Final da execução-");
@@ -74,6 +70,6 @@ public class app {
 			System.err.format("Erro de I/O", e);
 		}
 
-	}	
+	}
 
 }

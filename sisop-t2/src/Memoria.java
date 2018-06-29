@@ -20,6 +20,7 @@ public class Memoria {
 
 	/*
 	 * 
+	 * Print de cada memoria, com o bloco livre ou alocada para um processo
 	 */
 	public void print() {
 		for (Pagina p : this.paginas) {

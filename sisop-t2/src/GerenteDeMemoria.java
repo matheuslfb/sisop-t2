@@ -6,16 +6,15 @@ public class GerenteDeMemoria {
 
 	Scanner in = new Scanner(System.in);
 
-	
-	Algoritmo swap;
-	int tamPaginas;
-	int blocosMemoria;
-	int blocosDisco;
+	private Algoritmo swap;
+	private int tamPaginas;
+	private int blocosMemoria;
+	private int blocosDisco;
 
-	Memoria ram;
-	Memoria disk;
+	private Memoria ram;
+	private Memoria disk;
 
-	int qtdPaginas;
+	private int qtdPaginas;
 
 	/**
 	 * Metodo construtor. Faz uso das primeiras informacoes disponibilizadas no
@@ -31,19 +30,21 @@ public class GerenteDeMemoria {
 	}
 
 	/**
-	 * Recebe cada linha do arquivo de entrada e chama as funcoes
-	 * necessarias para atender esses comandos.
+	 * Funcao principal.
+	 * 
+	 * Recebe cada linha do arquivo de entrada e chama as funcoes necessarias para
+	 * atender esses comandos.
 	 */
-	public void run(String tipo, int processo, int enderecos) {
-		System.out.println("\n\nComando: " + tipo + " P" + processo + " " + enderecos);
+	public void run(String comando, int processo, int endMemoria) {
+		System.out.println("\n\nComando: " + comando + " P" + processo + " " + endMemoria);
 
-		if (tipo.equals("A"))
-			acessaProcesso(processo, enderecos);
-		else if (tipo.equals("M"))
-			alocaMemoria(processo, enderecos);
-		else if (tipo.equals("C"))
-			criaProcesso(processo, enderecos);
-		else if (tipo.equals("T")) {
+		if (comando.equals("A"))
+			acessaProcesso(processo, endMemoria);
+		else if (comando.equals("M"))
+			alocaMemoria(processo, endMemoria);
+		else if (comando.equals("C"))
+			criaProcesso(processo, endMemoria);
+		else if (comando.equals("T")) {
 			clean(processo);
 		}
 		ram.print();
@@ -74,7 +75,6 @@ public class GerenteDeMemoria {
 		ram = new Memoria(paginas);
 	}
 
-	
 	/**
 	 * Monta o disco, com um ArrayList de paginas necessarias
 	 */
@@ -97,8 +97,8 @@ public class GerenteDeMemoria {
 	}
 
 	/**
-	 *  A partir do comando 'C' lido, verifica quantas páginas são necessárias
-	 *  para criar um processo. A verificação é feita pelo método buscaPaginaVazia(int pg)
+	 * A partir do comando 'C' lido, verifica quantas páginas são necessárias para
+	 * criar um processo. A verificação é feita pelo método buscaPaginaVazia(int pg)
 	 */
 	private boolean criaProcesso(int procId, int solicitacao) {
 
@@ -110,7 +110,7 @@ public class GerenteDeMemoria {
 		}
 
 		System.out.println("Quantidade de paginas necessarias para criar o processo: " + qntPaginas + " páginas");
-		
+
 		int[] paginasVazias = this.buscaPaginaVazia(qntPaginas);
 
 		if (paginasVazias[0] == -1) {
@@ -128,13 +128,13 @@ public class GerenteDeMemoria {
 					return true;
 			}
 		}
-		
+
 		return true;
 	}
 
 	/**
-	 * A partir do comando 'A', busca em disco e em memória o processo, retornando se o bloco foi
-	 * encontrado ou nao.
+	 * A partir do comando 'A', busca em disco e em memória o processo, retornando
+	 * se o bloco foi encontrado ou nao.
 	 */
 	private boolean acessaProcesso(int procId, int target) {
 		int contador = 0;
@@ -150,7 +150,7 @@ public class GerenteDeMemoria {
 				}
 			}
 		}
-		
+
 		for (Pagina p : disk.paginas) {
 			for (Endereco e : p.enderecos) {
 				if (e.id != null && e.id == procId) {
@@ -167,8 +167,6 @@ public class GerenteDeMemoria {
 		System.out.println("Erro ao acessar processo." + " P" + procId + " " + contador + ":" + target);
 		return false;
 	}
-	
-	
 
 	/**
 	 * A partir do comando 'M', aloca mais espaco a um processo recursivamente
@@ -189,13 +187,12 @@ public class GerenteDeMemoria {
 		}
 		return 0;
 	}
-	
-	
+
 	/**
-	 * Faz a troca de processos entre memoria e disco	 
+	 * Faz a troca de processos entre memoria e disco
 	 */
 	private void trocaMemoriaDisco(int pgDisco) {
-		
+
 		int menosRecente = swap.pagUsada();
 
 		Pagina aux = new Pagina(-1);
@@ -204,17 +201,14 @@ public class GerenteDeMemoria {
 			aux.enderecos.add(e);
 		}
 
-		
 		int cont = 0;
 		for (Endereco end : aux.enderecos) {
 			end.id = ram.paginas.get(menosRecente).enderecos.get(cont).id;
 			end.bloco = ram.paginas.get(menosRecente).enderecos.get(cont).bloco;
 			cont++;
 		}
-		
+
 		for (Pagina memory : ram.paginas) {
-			
-			
 			if (memory.indice == menosRecente) {
 				int contEnd = 0;
 				for (Endereco e : memory.enderecos) {
@@ -224,7 +218,7 @@ public class GerenteDeMemoria {
 				}
 				break;
 			}
-		}		
+		}
 		for (Pagina disk : disk.paginas) {
 			if (disk.indice == pgDisco) {
 				int contEnd = 0;
@@ -246,7 +240,8 @@ public class GerenteDeMemoria {
 	}
 
 	/**
-	 * A partir da leitura do comando 'C': busca as paginas livre para criar o processo.
+	 * A partir da leitura do comando 'C': busca as paginas livre para criar o
+	 * processo.
 	 */
 	private int[] buscaPaginaVazia(int paginasNecessarias) {
 
@@ -263,7 +258,7 @@ public class GerenteDeMemoria {
 				}
 			}
 		}
-		
+
 		if (cont < paginasNecessarias) {
 			int[] faltaPagina = new int[1];
 			faltaPagina[0] = -1;
@@ -316,8 +311,8 @@ public class GerenteDeMemoria {
 	}
 
 	/**
-	 * Faz uma busca por pagina vazia disponivel em disco, retornando o indice da página
-	 * Retorna -1 se não ha nenhuma pagina.
+	 * Faz uma busca por pagina vazia disponivel em disco, retornando o indice da
+	 * página Retorna -1 se não ha nenhuma pagina.
 	 */
 	private int confereAlocacaoDisco() {
 		for (Pagina d : disk.paginas) {
@@ -329,5 +324,4 @@ public class GerenteDeMemoria {
 		return -1;
 	}
 
-	
 }
