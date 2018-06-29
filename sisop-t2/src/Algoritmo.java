@@ -14,7 +14,7 @@ public class Algoritmo {
 		this.qtdPaginas = qtdPaginas;
 	}
 
-	public void atualizaLista(int pagina) {
+	public void refreshPaginas(int pagina) {
 		if (qntPagUsadas.contains(pagina)) {
 			qntPagUsadas.add(qntPagUsadas.remove(qntPagUsadas.lastIndexOf(pagina)));
 		} else {

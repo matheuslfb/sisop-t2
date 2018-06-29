@@ -97,15 +97,16 @@ public class GerenteDeMemoria {
 	}
 
 	/**
-	 * A partir do comando 'C' lido, verifica quantas páginas são necessárias para
-	 * criar um processo. A verificação é feita pelo método buscaPaginaVazia(int pg)
+	 * A partir do comando 'C' lido, verifica quantas páginas são necessárias
+	 * para criar um processo. A verificação é feita pelo método
+	 * buscaPaginaVazia(int pg)
 	 */
-	private boolean criaProcesso(int procId, int solicitacao) {
+	private boolean criaProcesso(int procId, int tamProcesso) {
 
 		Processo p = new Processo(procId);
-		int qntPaginas = solicitacao / tamPaginas;
+		int qntPaginas = tamProcesso / tamPaginas;
 
-		if (solicitacao % tamPaginas != 0) {
+		if (tamProcesso % tamPaginas != 0) {
 			qntPaginas++;
 		}
 
@@ -123,8 +124,8 @@ public class GerenteDeMemoria {
 				endereco.id = p.id;
 				endereco.bloco = p.nextBloco;
 				p.nextBloco++;
-				solicitacao--;
-				if (solicitacao == 0)
+				tamProcesso--;
+				if (tamProcesso == 0)
 					return true;
 			}
 		}
@@ -136,15 +137,15 @@ public class GerenteDeMemoria {
 	 * A partir do comando 'A', busca em disco e em memória o processo, retornando
 	 * se o bloco foi encontrado ou nao.
 	 */
-	private boolean acessaProcesso(int procId, int target) {
+	private boolean acessaProcesso(int procId, int blocoDeMemoria) {
 		int contador = 0;
 		for (Pagina p : ram.paginas) {
 			for (Endereco e : p.enderecos) {
 				if (e.id != null && e.id == procId) {
 					contador++;
-					if (e.id != null && e.bloco == target) {
+					if (e.id != null && e.bloco == blocoDeMemoria) {
 						System.out.println("Processo acessado em memoria: endereco " + e.num);
-						swap.atualizaLista(p.indice);
+						swap.refreshPaginas(p.indice);
 						return true;
 					}
 				}
@@ -155,7 +156,7 @@ public class GerenteDeMemoria {
 			for (Endereco e : p.enderecos) {
 				if (e.id != null && e.id == procId) {
 					contador++;
-					if (e.id != null && e.bloco == target) {
+					if (e.id != null && e.bloco == blocoDeMemoria) {
 						System.out.println("Esta em disco");
 						System.out.println("Processo acessado em disco: endereco " + e.num);
 						trocaMemoriaDisco(p.indice);
@@ -164,17 +165,17 @@ public class GerenteDeMemoria {
 				}
 			}
 		}
-		System.out.println("Erro ao acessar processo." + " P" + procId + " " + contador + ":" + target);
+		System.out.println("Erro ao acessar processo." + " P" + procId + " " + contador + ":" + blocoDeMemoria);
 		return false;
 	}
 
 	/**
 	 * A partir do comando 'M', aloca mais espaco a um processo recursivamente
 	 */
-	private int alocaMemoria(int proc, int espacos) {
+	private int alocaMemoria(int processo, int espacosDeMemoria) {
 
-		int restante = preenche(proc, espacos);
-		// se preencheu e tudo que dava na memoria e precisa mais
+		int restante = preenche(processo, espacosDeMemoria);
+
 		if (restante > 0) {
 			int indPaginaVazia = confereAlocacaoDisco();
 			if (indPaginaVazia == -1) {
@@ -182,10 +183,51 @@ public class GerenteDeMemoria {
 			} else {
 				System.out.println("Efetuando troca memoria-disco por PAGE FAULT.");
 				trocaMemoriaDisco(indPaginaVazia);
-				alocaMemoria(proc, restante);
+				alocaMemoria(processo, restante);
 			}
 		}
 		return 0;
+	}
+	
+	/**
+	 * A partir do comando 'M': aloca espacos para um processo em paginas 
+	 * retornando o numero de espaço alocado e se não foi possivel alocas
+	 */
+	private int preenche(int idProcesso, int qntEspaco) {
+		int cont = qntEspaco;
+
+		for (Pagina p : ram.paginas) {
+			if (p.enderecos.get(0).id != null && p.enderecos.get(0).id == idProcesso) {
+				for (Endereco e : p.enderecos) {
+					if (e.id == null) {
+						e.id = idProcesso;
+						cont--;
+						swap.refreshPaginas(p.indice);
+						if (cont == 0) {
+							System.out.println("Espaço alocado com sucesso.");
+							return 0;
+						}
+					}
+				}
+			}
+		}
+		for (Pagina p : ram.paginas) {
+			if (p.enderecos.get(0).id == null) {
+				for (Endereco e : p.enderecos) {
+					if (e.id == null) {
+						e.id = idProcesso;
+						cont--;
+						swap.refreshPaginas(p.indice);
+						if (cont == 0) {
+							System.out.println("Espaço alocado com sucesso.");
+							return 0;
+						}
+					}
+				}
+			}
+		}
+		System.out.println("Nao foi possivel alocar o espaco, restando " + cont + ".");
+		return cont;
 	}
 
 	/**
@@ -210,22 +252,22 @@ public class GerenteDeMemoria {
 
 		for (Pagina memory : ram.paginas) {
 			if (memory.indice == menosRecente) {
-				int contEnd = 0;
+				int contMemory = 0;
 				for (Endereco e : memory.enderecos) {
-					e.id = disk.paginas.get(pgDisco).enderecos.get(contEnd).id;
-					e.bloco = disk.paginas.get(pgDisco).enderecos.get(contEnd).bloco;
-					contEnd++;
+					e.id = disk.paginas.get(pgDisco).enderecos.get(contMemory).id;
+					e.bloco = disk.paginas.get(pgDisco).enderecos.get(contMemory).bloco;
+					contMemory++;
 				}
 				break;
 			}
 		}
 		for (Pagina disk : disk.paginas) {
 			if (disk.indice == pgDisco) {
-				int contEnd = 0;
+				int contDisk = 0;
 				for (Endereco e : disk.enderecos) {
-					e.id = aux.enderecos.get(contEnd).id;
-					e.bloco = aux.enderecos.get(contEnd).bloco;
-					contEnd++;
+					e.id = aux.enderecos.get(contDisk).id;
+					e.bloco = aux.enderecos.get(contDisk).bloco;
+					contDisk++;
 				}
 			}
 		}
@@ -241,7 +283,7 @@ public class GerenteDeMemoria {
 
 	/**
 	 * A partir da leitura do comando 'C': busca as paginas livre para criar o
-	 * processo.
+	 * processo. Retorna -1, caso n�o tenha paginas disponiveis.
 	 */
 	private int[] buscaPaginaVazia(int paginasNecessarias) {
 
@@ -252,7 +294,7 @@ public class GerenteDeMemoria {
 			if (ram.paginas.get(p).enderecos.get(0).id == null) {
 				paginasEncontradas[cont] = p;
 				cont++;
-				swap.atualizaLista(p);
+				swap.refreshPaginas(p);
 				if (cont == paginasNecessarias) {
 					break;
 				}
@@ -268,47 +310,7 @@ public class GerenteDeMemoria {
 		return paginasEncontradas;
 	}
 
-	/**
-	 * A partir do comando 'M': aloca espacos para um processo em paginas onde ja
-	 * retornando o numero de espaço alocado e se não foi possivel alocas
-	 */
-	private int preenche(int idProcesso, int qntEspaco) {
-		int cont = qntEspaco;
-
-		// primeiro preenche onde ja tem
-		for (Pagina p : ram.paginas) {
-			if (p.enderecos.get(0).id != null && p.enderecos.get(0).id == idProcesso) {
-				for (Endereco e : p.enderecos) {
-					if (e.id == null) {
-						e.id = idProcesso;
-						cont--;
-						swap.atualizaLista(p.indice);
-						if (cont == 0) {
-							System.out.println("Espaço alocado com sucesso.");
-							return 0;
-						}
-					}
-				}
-			}
-		}
-		for (Pagina p : ram.paginas) {
-			if (p.enderecos.get(0).id == null) {
-				for (Endereco e : p.enderecos) {
-					if (e.id == null) {
-						e.id = idProcesso;
-						cont--;
-						swap.atualizaLista(p.indice);
-						if (cont == 0) {
-							System.out.println("Espaço alocado com sucesso.");
-							return 0;
-						}
-					}
-				}
-			}
-		}
-		System.out.println("Nao foi possivel alocar o espaco, restando " + cont + ".");
-		return cont;
-	}
+	
 
 	/**
 	 * Faz uma busca por pagina vazia disponivel em disco, retornando o indice da
@@ -317,7 +319,6 @@ public class GerenteDeMemoria {
 	private int confereAlocacaoDisco() {
 		for (Pagina d : disk.paginas) {
 			if (d.enderecos.get(0).id == null) {
-				// pagina livre
 				return d.indice;
 			}
 		}
