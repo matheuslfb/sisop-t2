@@ -263,12 +263,11 @@ public class GerenteDeMemoria {
 				}
 			}
 		}
-
-		// A "bomba" eh utilizada no create para indicar falta de Memoria
+		
 		if (cont < paginasNecessarias) {
-			int[] bomb = new int[1];
-			bomb[0] = -1;
-			return bomb;
+			int[] faltaPagina = new int[1];
+			faltaPagina[0] = -1;
+			return faltaPagina;
 		}
 
 		return paginasEncontradas;
